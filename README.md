@@ -19,10 +19,16 @@ make all
 ```
 All codes in the ```code``` folder will compile, including the shared buffer in the header. For more details please consult the documentation.
 
+<br>
+
 ### Reference links
 https://man7.org/linux/man-pages/man3/shm_open.3.html
+
 https://man7.org/linux/man-pages/man3/shm_unlink.3p.html
+
 https://man7.org/linux/man-pages/man3/shm_open.3.html
+
 https://man7.org/linux/man-pages/man3/pthread_create.3.html
+
 https://man7.org/linux/man-pages/man3/pthread_join.3.html
 
