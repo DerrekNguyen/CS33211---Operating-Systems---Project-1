@@ -26,7 +26,7 @@ https://man7.org/linux/man-pages/man3/shm_open.3.html
 
 https://man7.org/linux/man-pages/man3/shm_unlink.3p.html
 
-https://man7.org/linux/man-pages/man3/shm_open.3.html
+https://www.geeksforgeeks.org/use-posix-semaphores-c/
 
 https://man7.org/linux/man-pages/man3/pthread_create.3.html
 
