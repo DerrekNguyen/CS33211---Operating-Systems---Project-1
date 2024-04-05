@@ -13,10 +13,10 @@
 #define BUF_SIZE 2
 
 // Shared buffer
-typedef struct shmbuf {
+struct shmbuf {
 	sem_t empty;
 	sem_t full;
 	sem_t mutex;
 	int indexIn, indexOut;
 	int table[BUF_SIZE];
-} shr_mem;
+};

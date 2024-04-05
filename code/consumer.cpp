@@ -9,9 +9,9 @@
 using std::cout;
 
 // Variables for the shared memory buffer
-int fd;
+int fd = -1;
 char *shmpath;
-shr_mem *buf;
+struct shmbuf *conBuf;
 
 // Consumer thread
 void *consumer(void *argc) {
@@ -24,17 +24,17 @@ void *consumer(void *argc) {
 	while (i < 5) 
 	{	
 		// Wait
-		sem_wait(&buf->full);
-		sem_wait(&buf->mutex);
+		sem_wait(&conBuf->full);
+		sem_wait(&conBuf->mutex);
 
 		// Critical section
-		item2 = buf->table[buf->indexOut];
+		item2 = conBuf->table[conBuf->indexOut];
 		cout << "Consumed: " << item2 << std::endl;
-		buf->indexOut = (buf->indexOut + 1) % BUF_SIZE;
+		conBuf->indexOut = (conBuf->indexOut + 1) % BUF_SIZE;
 
 		// Signal
-		sem_post(&buf->mutex);
-		sem_post(&buf->empty);
+		sem_post(&conBuf->mutex);
+		sem_post(&conBuf->empty);
 		++i;
 
 		// Waits 1 second
@@ -49,9 +49,12 @@ int main(int agrc, char* argv[]) {
 
 	// Opens shared memory
 	shmpath = argv[1];
-	fd = shm_open(shmpath, O_RDWR, 0);
-	ftruncate(fd, sizeof(shr_mem));
-	buf = static_cast<shr_mem*>(mmap(NULL, sizeof(shr_mem), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+	while (fd == -1) fd = shm_open(shmpath, O_RDWR, 0);
+	conBuf = static_cast<shmbuf*>(mmap(NULL, sizeof(shr_mem), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+	
+	// Keep retrying until the shared buffer is accessed
+	while (conBuf == MAP_FAILED) 
+		conBuf = static_cast<shmbuf*>(mmap(NULL, sizeof(shr_mem), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
 	
 	// Runs consumer thread
 	cout << "Consumer thread starting" << std::endl;
