@@ -50,11 +50,11 @@ int main(int agrc, char* argv[]) {
 	// Opens shared memory
 	shmpath = argv[1];
 	while (fd == -1) fd = shm_open(shmpath, O_RDWR, 0);
-	conBuf = static_cast<shmbuf*>(mmap(NULL, sizeof(shr_mem), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+	conBuf = static_cast<shmbuf*>(mmap(NULL, sizeof(*conBuf), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
 	
 	// Keep retrying until the shared buffer is accessed
 	while (conBuf == MAP_FAILED) 
-		conBuf = static_cast<shmbuf*>(mmap(NULL, sizeof(shr_mem), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+		conBuf = static_cast<shmbuf*>(mmap(NULL, sizeof(*conBuf), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
 	
 	// Runs consumer thread
 	cout << "Consumer thread starting" << std::endl;
